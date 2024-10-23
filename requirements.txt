@@ -5,3 +5,5 @@ numpy==1.26.0
 jupyter==1.0.0
 notebook==7.0.6
 html5lib==1.1
+yfinance==0.2.46
+shiny==1.1.0
