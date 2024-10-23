@@ -7,14 +7,6 @@ from option_data import get_option_chain, get_last_price
 app_ui = ui.page_fluid(
     # Link the custom CSS file
     ui.tags.link(rel="stylesheet", href="static/css/styles.css"),
-    # ui.tags.style("""
-    #     .text-center { text-align: center; }
-    #     .btn { background-color: #007bff; color: white; }
-    #     .mt-2 { margin-top: 10px; }
-    #     .mt-3 { margin-top: 15px; }
-    #     .table-striped { width: 100%; border-collapse: collapse; }
-    #     .table-striped th, .table-striped td { padding: 10px; border: 1px solid #ddd; }
-    # """),
     
     ui.h2("Options Calculator", class_="text-center"),
     ui.p("Enter a stock symbol to retrieve the corresponding options chain. Use the stock symbol (e.g., AAPL, TSLA, GOOGL).", class_="text-center"),
@@ -28,6 +20,7 @@ app_ui = ui.page_fluid(
 )
 
 # Define the server logic
+# Define the server logic
 def server(input, output, session):
     # Manage loading states
     is_loading = reactive.Value(False)
@@ -38,6 +31,16 @@ def server(input, output, session):
         if is_loading.get():
             return "Loading options data, please wait..."
         return ""
+
+    @output
+    @render.text
+    def last_price():
+        symbol = input.symbol()
+        try:
+            price = get_last_price(symbol)  # Assuming this function retrieves the last price
+            return f"Last Price: ${price:.2f}" if price is not None else "Price not available."
+        except Exception as e:
+            return f"Error fetching price: {e}"
 
     @output
     @render.table
