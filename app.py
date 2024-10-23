@@ -35,4 +35,3 @@ app = App(app_ui, server)
 # Run the app
 if __name__ == "__main__":
     app.run()
-
