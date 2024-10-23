@@ -11,12 +11,12 @@ using namespace std;
 
 int main() {
     // Example option parameters
-    double S = 100.0;  // Stock price
-    double K = 100.0;  // Strike price
-    double r = 0.05;   // Risk-free rate
+    double S = 424.0;  // Stock price
+    double K = 240.0;  // Strike price
+    double r = 0.06;   // Risk-free rate
     double t = 0.007937;    // Time to maturity (1 year)
-    double sigma = 0.2;  // Volatility
-    double market_price = 130.75;
+    double sigma = 0.21523;  // Volatility
+    double market_price = 184.25;
     std::string option_type = "call";  // Call or Put option
 
     // Calculate Greeks

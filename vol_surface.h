@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <string>
+#include <stdexcept>
 
 #include "greeks.h"
 #include "eu_option.h"
@@ -10,8 +11,8 @@
 double implied_volatility(double S, double K, double r, double t, string option_type, double market_price){
     // Calculate the Black-Scholes Implied Volatilies using the Newton-Raphson method
     double sigma = 0.2; // Initial Guess
-    double tolerance = 1e-5; // Convergence Tolerance
-    double max_iterations = 100; // Max Iterations
+    double tolerance = 0.01; // Convergence Tolerance
+    int max_iterations = 100; // Max Iterations
 
     //Use Newton-Raphson root-finding method
     for (int i = 0; i <= max_iterations; i++){
@@ -22,15 +23,13 @@ double implied_volatility(double S, double K, double r, double t, string option_
         double diff = price - market_price;
         sigma -= diff / vega_value;
 
-        if (fabs(diff) < tolerance) {
+        if (abs(diff) < tolerance) {
             return sigma;
         }
+        else {
+            throw std::invalid_argument("Could not reach convergence.");
+        }
     }
-}
-
-double vol_surface(double strikes, double maturities, double implied_vols){
 
 }
-
-
 #endif
