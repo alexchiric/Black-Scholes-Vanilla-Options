@@ -5,6 +5,7 @@
 #include "cdf.h"
 #include "eu_option.h"
 #include "greeks.h"
+#include "vol_surface.h"
 
 using namespace std;
 
@@ -13,9 +14,10 @@ int main() {
     double S = 100.0;  // Stock price
     double K = 100.0;  // Strike price
     double r = 0.05;   // Risk-free rate
-    double t = 1.0;    // Time to maturity (1 year)
+    double t = 0.007937;    // Time to maturity (1 year)
     double sigma = 0.2;  // Volatility
-    std::string option_type = "put";  // Call or Put option
+    double market_price = 130.75;
+    std::string option_type = "call";  // Call or Put option
 
     // Calculate Greeks
     double price = eu_option(S, K, r, t, sigma, option_type);
@@ -32,6 +34,10 @@ int main() {
     std::cout << "Vega: " << vega_value << std::endl;
     std::cout << "Theta: " << theta_value << std::endl;
     std::cout << "Rho: " << rho_value << std::endl;
+
+    double implied_vol = implied_volatility(S, K, r, t, option_type, market_price);
+
+    std::cout << "Implied Volatility: " << implied_vol << std::endl;
 
     return 0;
 }
