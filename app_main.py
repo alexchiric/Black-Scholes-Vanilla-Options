@@ -41,13 +41,13 @@ with ui.card(full_screen=True):
 
                 # Display the entire options DataFrame
                 head_size = int(input.items_per_page())
-                match input.call_option():
-                    case "All":
-                        return options_df.head(head_size)
-                    case "Call":
-                        call_options_df = options_df[options_df['CALL'] == True]
-                    case "Put":
-                        call_options_df = options_df[options_df['CALL'] == False]
+                ui_call_option = input.call_option()
+                if ui_call_option == "All":
+                    call_options_df = options_df.head(head_size)
+                if ui_call_option == "Call":
+                    call_options_df = options_df[options_df['CALL'] == True]
+                if ui_call_option == "Put":
+                    call_options_df = options_df[options_df['CALL'] == False]
                 return call_options_df
             
             except Exception as e:
@@ -68,4 +68,3 @@ with ui.card(full_screen=True):
         view_4
         """
         # Code view_4
-        
