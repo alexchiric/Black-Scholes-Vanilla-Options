@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
+import numpy as np
 import datetime
 
 def get_option_chain(symbol):
@@ -39,4 +40,14 @@ def get_option_chain(symbol):
     options = options.drop(columns=['contractSize', 'currency', 'change', 'percentChange', 'lastTradeDate', 'lastPrice'])
 
     return options
+
+def get_last_price(symbol):
+    #Fetch Ticker Data
+    x = yf.Ticker(symbol)
+
+    #Get the last price
+    last_price = x.history(period='1d')['Close'][0]
+    print(last_price)
+
+    return last_price
 
