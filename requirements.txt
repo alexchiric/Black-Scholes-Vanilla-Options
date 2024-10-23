@@ -7,3 +7,6 @@ notebook==7.0.6
 html5lib==1.1
 yfinance==0.2.46
 shiny==1.1.0
+faicons=0.2.2
+shinywidgets==0.3.3
+palmerpenguins
