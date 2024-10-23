@@ -8,28 +8,23 @@
 #include "greeks.h"
 #include "eu_option.h"
 
-double implied_volatility(double S, double K, double r, double t, string option_type, double market_price){
-    // Calculate the Black-Scholes Implied Volatilies using the Newton-Raphson method
-    double sigma = 0.2; // Initial Guess
-    double tolerance = 0.01; // Convergence Tolerance
-    int max_iterations = 100; // Max Iterations
+double implied_volatility(double S, double K, double r, double t, string option_type, double market_price) {
+    const double EPSILON = 1e-3; // Convergence tolerance: how close the calculated price must be to the market price
+    double sigma = 0.4; //Initial Sigma Guess
+    double price = eu_option(S, K, r, t, sigma, option_type); //Initial Price under current sigma guess
 
-    //Use Newton-Raphson root-finding method
-    for (int i = 0; i <= max_iterations; i++){
-        double price = eu_option(S, K, r, t, sigma, option_type);
-        double vega_value = vega(S, K, r, t, sigma, option_type);
+    // Iterative process to adjust sigma (volatility) until the price is close enough to the market price
+    while (fabs(price - market_price) > EPSILON) {
+        // Calculate the vega (first derivative of the option price with respect to sigma)
+        double vega_value = vega(S, K, r, t, sigma, option_type); // Corrected from sigma_init to sigma
 
-        //Newton-Raphson Model sigma_1 = sigma_0 - f(sigma)/f'(sigma)
-        double diff = price - market_price;
-        sigma -= diff / vega_value;
+        // Newton-Raphson update step: adjust sigma using the difference between market price and calculated price
+        sigma += (market_price - price) / vega_value;
 
-        if (abs(diff) < tolerance) {
-            return sigma;
-        }
-        else {
-            throw std::invalid_argument("Could not reach convergence.");
-        }
+        // Recalculate the option price with the updated sigma value
+        price = eu_option(S, K, r, t, sigma, option_type);
     }
 
+    return sigma;
 }
 #endif

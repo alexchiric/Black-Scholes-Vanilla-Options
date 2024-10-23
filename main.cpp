@@ -11,12 +11,12 @@ using namespace std;
 
 int main() {
     // Example option parameters
-    double S = 424.0;  // Stock price
-    double K = 240.0;  // Strike price
-    double r = 0.06;   // Risk-free rate
+    double S = 230.76;  // Stock price
+    double K = 230.0;  // Strike price
+    double r = 0.05;   // Risk-free rate
     double t = 0.007937;    // Time to maturity (1 year)
-    double sigma = 0.21523;  // Volatility
-    double market_price = 184.25;
+    double sigma = 4.109380;  // Volatility
+    double market_price = 2.20;
     std::string option_type = "call";  // Call or Put option
 
     // Calculate Greeks
@@ -26,7 +26,8 @@ int main() {
     double vega_value = vega(S, K, r, t, sigma, option_type);
     double theta_value = theta(S, K, r, t, sigma, option_type);
     double rho_value = rho(S, K, r, t, sigma, option_type);
-
+    double implied_vol = implied_volatility(S, K, r, t, option_type, market_price);
+    
     // Print results
     std::cout << "Price: " << price << std::endl;
     std::cout << "Delta: " << delta_value << std::endl;
@@ -34,9 +35,6 @@ int main() {
     std::cout << "Vega: " << vega_value << std::endl;
     std::cout << "Theta: " << theta_value << std::endl;
     std::cout << "Rho: " << rho_value << std::endl;
-
-    double implied_vol = implied_volatility(S, K, r, t, option_type, market_price);
-
     std::cout << "Implied Volatility: " << implied_vol << std::endl;
 
     return 0;
