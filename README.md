@@ -1,4 +1,4 @@
-© 2024 Alexandru Chiric. All rights reserved.
+© 2024 Alexandru Chiric & Horia Zamfir. All rights reserved.
 
 # Black-Scholes-Vanilla-Options
  A C++ calculator for vanilla option prices and the associated Greeks
