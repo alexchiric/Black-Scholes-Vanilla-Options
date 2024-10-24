@@ -22,6 +22,7 @@ with ui.sidebar():
         ["All", "Call", "Put"]
     )
     ui.input_numeric("strike_price", "Strike Price", "None")
+    ui.input_slider("implied_volatility", "Implied Volatility", min=0, max=1,value=[0,1])
 
 with ui.card(fill=False):
     with ui.div():
@@ -42,7 +43,7 @@ with ui.card(full_screen=True,style="max-height: 75vh; overflow-y: auto;"):
         """
         if ui_card_view == "Option Table":
             try:
-                options_df = get_option_chain(symbol)  # Only expect one value (the DataFrame)
+                options_df = get_option_chain(symbol)
 
                 if options_df.empty:
                     return pd.DataFrame({"Error": [f"No option data found for symbol {symbol}."]})
@@ -50,6 +51,11 @@ with ui.card(full_screen=True,style="max-height: 75vh; overflow-y: auto;"):
                 # Display the entire options DataFrame
                 head_size = int(input.items_per_page())
                 ui_call_option = input.call_option()
+                if input.implied_volatility() ==[0,1]:
+                    return input.implied_volatility()
+                if input.strike_price() != None :
+                    strike_value = float(input.strike_price())
+                    options_df = options_df[options_df['strike'] >= strike_value]
                 if ui_call_option == "All":
                     call_options_df = options_df.head(head_size)
                 if ui_call_option == "Call":
@@ -89,7 +95,11 @@ def search_symbol_option_calculator():
 
 @reactive.effect
 @reactive.event(input.view_type)
-def search_symbol_option_calculator():    
+def search_symbol_option_calculator():
+    if input.view_type() == "Option Calculator" and temp_view_type!="Option Calculator":
+        ui_card_view_global.set("Option Calculator")
+        temp_view_type.set("Option Calculator")
+        ui.update_selectize("view_type",selected="Option Calculator")
     if input.view_type() == "Option Table" and temp_view_type!="Option Table":
         ui_card_view_global.set("Option Table")
         temp_view_type.set("Option Table")

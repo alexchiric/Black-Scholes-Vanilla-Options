@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ## How to Run 
 Use the following command
-```
+```bash
 python -m shiny run app_main.py --port 8000
 ```
 
