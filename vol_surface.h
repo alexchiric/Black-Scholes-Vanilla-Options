@@ -10,7 +10,7 @@
 
 double implied_volatility(double S, double K, double r, double t, string option_type, double market_price) {
     const double EPSILON = 1e-3; // Convergence tolerance: how close the calculated price must be to the market price
-    double sigma = 0.4; //Initial Sigma Guess
+    float sigma = 0.4; //Initial Sigma Guess
     double price = eu_option(S, K, r, t, sigma, option_type); //Initial Price under current sigma guess
 
     // Iterative process to adjust sigma (volatility) until the price is close enough to the market price
