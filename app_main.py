@@ -73,7 +73,7 @@ with ui.card(full_screen=True,style="max-height: 75vh; overflow-y: auto;"):
         Option Calculator
         """
         if ui_card_view == "Option Calculator":
-            return pd.DataFrame({"Message": ["No given Symbol for Option Calculator"]})
+            return pd.DataFrame({"Message": ["No given Symbol for Option Calculator for symbol" + input.symbols_unique_identifier()]})
 
         """
         view_3
@@ -87,10 +87,13 @@ with ui.card(full_screen=True,style="max-height: 75vh; overflow-y: auto;"):
 
 ui_card_view_global = reactive.value("Option Table")
 temp_view_type= reactive.value("Option Table")
+global_symbol = reactive.value("")
+
 @reactive.effect
 @reactive.event(input.search_symbol)
 def search_symbol_option_calculator():
     ui_card_view_global.set("Option Calculator")
+    global_symbol.set(input.symbols_unique_identifier())
     ui.update_selectize("view_type",selected="Option Calculator")
 
 @reactive.effect
