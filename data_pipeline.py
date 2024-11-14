@@ -50,5 +50,28 @@ def valuation_pipeline(options_data, contract_symbol, last):
 
     return results_df
 
+def vol_smile_pipeline(options_data, date, last, optionType = True):
+    
+    options_data['optionType'] = options_data['CALL'].apply(lambda x: 1 if x else 0)
+    options_data_df = options_data[(options_data["expirationDate"] == date) & (options_data["CALL"] == optionType)]
+    options_data_df = options_data_df.drop(columns=['openInterest', 'inTheMoney', 'expirationDate', 'bid', 'ask', 'volume', 'CALL', 'contractSymbol'])
+    options_data_df['Underlying'] = last
+
+     #Declare current directory for tempfile
+    current_dir = os.getcwd()
+
+    if options_data_df.empty:
+        raise ValueError("Filtered data is empty. Please check the contract symbol or the options data.")
+    
+    with tempfile.NamedTemporaryFile(delete= False, suffix=".bin", dir=current_dir) as temp_file:
+        options_data_np = options_data_df.to_numpy(dtype = np.double)
+        print(options_data_np)
+        options_data_np.tofile(temp_file.name)
+
+        new_file_path = os.path.join(current_dir, 'temp.bin')
+        os.rename(temp_file.name, new_file_path)
+
+    
+
 options_data, last = get_option_chain("AAPL"), get_last_price("AAPL")
-print(valuation_pipeline(options_data, 'AAPL241115C00005000', last))
+print(vol_smile_pipeline(options_data, date = "2024-11-16", last= last))

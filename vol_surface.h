@@ -4,6 +4,7 @@
 #include <cmath>
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 #include "greeks.h"
 #include "eu_option.h"
@@ -26,5 +27,10 @@ double implied_volatility(double S, double K, double r, double t, string option_
     }
 
     return sigma;
+}
+
+double vol_smile(double S, double K, double r, double t, string option_type, double market_price) {
+
+    return 
 }
 #endif
