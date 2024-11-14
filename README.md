@@ -1,4 +1,4 @@
-© 2024 Alexandru Chiric. All rights reserved.
+© 2024 Alexandru Chiric & Horia Zamfir. All rights reserved.
 
 # Black-Scholes-Vanilla-Options
  A C++ calculator for vanilla option prices and the associated Greeks
@@ -40,5 +40,11 @@ source venv/bin/activate
 Run the following commands in Terminal:
 ```bash
 pip install -r requirements.txt
+```
+
+## How to Run 
+Use the following command
+```bash
+python -m shiny run app_main.py --port 8000
 ```
 
