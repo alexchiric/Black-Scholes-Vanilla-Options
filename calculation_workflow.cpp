@@ -12,7 +12,7 @@
 
 int main() {
     std::ifstream file("temp.bin", std::ios::binary);
-
+    std::cout << "got into program" << std::endl;
     if (!file) {
         std::cerr << "Unable to open file!" << std::endl;
         return 1;  // Error exit if the file can't be opened
@@ -69,6 +69,30 @@ int main() {
     std::cout << "Vega: " << vega_value << std::endl;
     std::cout << "Theta: " << theta_value << std::endl;
     std::cout << "Rho: " << rho_value << std::endl;
+
+    // Save results to temp.bin as binary data
+    std::ofstream outFile("temp.bin", std::ios::binary | std::ios::trunc);
+    if (!outFile) {
+        std::cerr << "Unable to open temp.bin for writing!" << std::endl;
+        return 1; // Exit if file can't be opened
+    }
+
+    // Create a vector of the calculated values
+    std::vector<double> greeks;
+    greeks.push_back(price);
+    greeks.push_back(delta_value);
+    greeks.push_back(gamma_value);
+    greeks.push_back(vega_value);
+    greeks.push_back(theta_value);
+    greeks.push_back(rho_value);
+
+
+    // Write the values to the file
+    outFile.write(reinterpret_cast<const char*>(greeks.data()), greeks.size() * sizeof(double));
+    outFile.close();
+
+    std::cout << "Results saved to temp.bin successfully." << std::endl;
+
 
     return 0;
 

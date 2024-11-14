@@ -19,6 +19,9 @@ def valuation_pipeline(options_data, contract_symbol, last):
     #Declare current directory for tempfile
     current_dir = os.getcwd()
 
+    if options_data_df.empty:
+        raise ValueError("Filtered data is empty. Please check the contract symbol or the options data.")
+    
     with tempfile.NamedTemporaryFile(delete= False, suffix=".bin", dir=current_dir) as temp_file:
         options_data_np = options_data_df.to_numpy()
         options_data_np.tofile(temp_file.name)
@@ -34,12 +37,18 @@ def valuation_pipeline(options_data, contract_symbol, last):
 
             run_command = ['./calculation_workflow']
             subprocess.run(run_command)
+
         except:
             raise RuntimeError("Failed to compile C++ script")
-    
+        
+        column_names = ['Price', 'Delta', 'Gamma', 'Vega', 'Theta', 'Rho']
+        results_np = np.fromfile('temp.bin', dtype= np.double)
+        results_df = pd.DataFrame([results_np], columns = column_names)
+        
     #Remove temp file
     os.remove(new_file_path)
 
-options_data, last = get_option_chain("AAPL"), get_last_price("AAPL")
+    return results_df
 
-valuation_pipeline(options_data, 'AAPL241025C00105000', last)
+options_data, last = get_option_chain("AAPL"), get_last_price("AAPL")
+print(valuation_pipeline(options_data, 'AAPL241115C00005000', last))
