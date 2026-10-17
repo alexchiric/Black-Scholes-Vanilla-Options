@@ -35,3 +35,10 @@
 .bashrc
 __pycache__/
 venv
+# Build output and local artefacts of the C++ engine
+build/
+*.dSYM/
+temp.bin
+.DS_Store
+.venv/
+venv/

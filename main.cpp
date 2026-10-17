@@ -1,41 +1,36 @@
-#include <iostream>
-#include <math.h>
-#include <array>
+// Small command-line demo of the pricing core (build with `make demo`).
+// For batch work use bs_engine (see bs_engine.cpp) or the Python layer.
 
-#include "cdf.h"
+#include <iostream>
+
 #include "eu_option.h"
 #include "greeks.h"
 #include "vol_surface.h"
 
-using namespace std;
-
 int main() {
-    // Example option parameters
-    double S = 230.76;  // Stock price
-    double K = 230.0;  // Strike price
-    double r = 0.05;   // Risk-free rate
-    double t = 0.007937;    // Time to maturity (1 year)
-    double sigma = 4.109380;  // Volatility
-    double market_price = 2.20;
-    std::string option_type = "call";  // Call or Put option
+    // Example: 2-day AAPL call
+    const double S = 230.76;           // spot
+    const double K = 230.0;            // strike
+    const double r = 0.05;             // risk-free rate
+    const double q = 0.0;              // dividend yield
+    const double t = 2.0 / 365.0;      // time to expiry in years (ACT/365)
+    const double market_price = 2.20;  // observed option price
+    const OptionType type = OptionType::Call;
 
-    // Calculate Greeks
-    double price = eu_option(S, K, r, t, sigma, option_type);
-    double delta_value = delta(S, K, r, t, sigma, option_type);
-    double gamma_value = gamma(S, K, r, t, sigma, option_type);
-    double vega_value = vega(S, K, r, t, sigma, option_type);
-    double theta_value = theta(S, K, r, t, sigma, option_type);
-    double rho_value = rho(S, K, r, t, sigma, option_type);
-    double implied_vol = implied_volatility(S, K, r, t, option_type, market_price);
-    
-    // Print results
-    std::cout << "Price: " << price << std::endl;
-    std::cout << "Delta: " << delta_value << std::endl;
-    std::cout << "Gamma: " << gamma_value << std::endl;
-    std::cout << "Vega: " << vega_value << std::endl;
-    std::cout << "Theta: " << theta_value << std::endl;
-    std::cout << "Rho: " << rho_value << std::endl;
-    std::cout << "Implied Volatility: " << implied_vol << std::endl;
+    const IVResult iv = implied_volatility_checked(S, K, r, t, type, market_price, q);
+    std::cout << "Implied volatility : ";
+    if (iv.status != IVStatus::Ok) {
+        std::cout << "n/a (" << iv_status_str(iv.status) << ")\n";
+        return 1;
+    }
+    std::cout << iv.iv << "  (" << iv.iterations << " iterations)\n";
 
+    const Greeks g = bs_all(S, K, r, t, iv.iv, type, q);
+    std::cout << "Price              : " << g.price << "\n"
+              << "Delta              : " << g.delta << "\n"
+              << "Gamma              : " << g.gamma << "\n"
+              << "Vega  (per 1 vol pt): " << g.vega / 100.0 << "\n"
+              << "Theta (per day)    : " << g.theta / 365.0 << "\n"
+              << "Rho   (per 1% rate): " << g.rho / 100.0 << "\n";
     return 0;
 }

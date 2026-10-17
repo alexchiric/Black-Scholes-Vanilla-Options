@@ -1,13 +1,9 @@
-pandas==2.1.0
-beautifulsoup4==4.12.2
-ipython==8.15.0
-numpy==1.26.0
-jupyter==1.0.0
-notebook==7.0.6
-html5lib==1.1
-yfinance==0.2.46
-shiny==1.1.0
-faicons==0.2.2
-shinywidgets==0.3.3
-palmerpenguins
-shinywidgets
+# Runtime requirements (Python 3.9+). The C++ engine needs a C++17 compiler (Xcode command line tools on macOS).
+numpy>=1.26
+pandas>=2.1
+jinja2>=3.1.2        # pandas Styler, used by Shiny's render.table
+yfinance>=0.2.46     # live option chains (not needed for the synthetic demo)
+shiny>=1.1
+shinywidgets>=0.3.3
+shinyswatch>=0.5
+plotly>=5.18
